@@ -10,8 +10,12 @@ static char timerFlag = 0;
 void SysTick_Handler(void);
 void USART2_IRQHandler(void);
 void EXTI0_IRQHandler(void);
-static void sendUART(uint8_t * data, uint32_t length);
-static uint8_t receiveUART(void);
+void sendUART(uint8_t * data, uint32_t length);
+uint8_t receiveUART(void);
+void gpioInit(void);
+void uartInit(void);
+void hardware_init(void);
+
 
 void SysTick_Handler(void)  {
 	timerFlag = 1;
@@ -41,7 +45,7 @@ void EXTI0_IRQHandler(void) {
 		}
 }
 
-static void sendUART(uint8_t * data, uint32_t length)
+void sendUART(uint8_t * data, uint32_t length)
 {
 	 for (uint32_t i=0; i<length; ++i){
       // add new data without messing up DR register
@@ -55,7 +59,7 @@ static void sendUART(uint8_t * data, uint32_t length)
       }
 }
 
-static uint8_t receiveUART()
+uint8_t receiveUART()
 {
 	  // extract data
 	  uint8_t data = USART2->DR & 0xFF;
@@ -63,7 +67,7 @@ static uint8_t receiveUART()
 	  return data;
 }
 
-static void gpioInit()
+void gpioInit()
 {	
     // enable GPIOA clock, bit 0 on AHB1ENR
     RCC->AHB1ENR |= (1 << 0);
@@ -81,7 +85,7 @@ static void gpioInit()
     GPIOA->AFR[0] |= (0x7 << 12); // for pin A3
 }
 
-static void uartInit()
+void uartInit()
 {
 	
     // enable USART2 clock, bit 17 on APB1ENR
@@ -109,7 +113,7 @@ static void uartInit()
     USART2->CR1 |= (1 << 13);
 }
 
-static void hardware_init()
+void hardware_init()
 {
 		 /* startup code initialization */
 	  SystemInit();
