@@ -5,9 +5,7 @@ static uint8_t pressedMsg[] = "Button is pressed !!\n";
 static uint8_t releasedMsg[] = "Button is released !!\n";
 static char buttonPressed = 1;
 static volatile uint8_t stopFlag = 0;
-static char timerFlag = 0;
 
-void SysTick_Handler(void);
 void USART2_IRQHandler(void);
 void EXTI0_IRQHandler(void);
 void sendUART(uint8_t * data, uint32_t length);
@@ -16,10 +14,6 @@ void gpioInit(void);
 void uartInit(void);
 void hardware_init(void);
 
-
-void SysTick_Handler(void)  {
-	timerFlag = 1;
-}
 
 void USART2_IRQHandler(void) {
 	/* pause/resume UART messages */

@@ -5,6 +5,16 @@ static const uint16_t MAX_SIZE = 16;
 static uint8_t msg[] = "IDLE !!\n";
 static struct task_queue main_queue;
 static struct task_queue delayed_queue;
+static volatile int skipped_cycles = 0;
+static char timerFlag = 0;
+
+void SysTick_Handler(void);
+
+
+void SysTick_Handler(void) {
+	timerFlag = 1;
+	skipped_cycles++;
+}
 
 // Enqueue task in the main queue with a certain priorty
 static void queue_task(fptr f, int prio)
@@ -19,10 +29,12 @@ static void dispatch()
 		if(delayed_queue.cur_sz>0)
 		{
 			// decrement delays
-			decrement_all(&delayed_queue);
+			decrement_all(&delayed_queue, skipped_cycles);
 			// pop those ones that are ready from the delayed to the main
 			push_all_ready(&delayed_queue, &main_queue);
 		}
+		// New dispacthed --> no skipped cycles for the rest
+		skipped_cycles = 0;
 		// dispatch tasks if available, else display ("idle")
 		if(main_queue.cur_sz>0) dequeue(&main_queue).f();
 		else sendUART(msg, sizeof(msg));

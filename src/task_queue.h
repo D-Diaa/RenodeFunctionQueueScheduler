@@ -29,7 +29,7 @@ void _enqueue(struct task_queue* q, struct task new_task);
 void max_heap(struct task_queue* q, int i);
 void swap(struct task *task1, struct task *task2);
 struct task dequeue(struct task_queue* q);
-void decrement_all(struct task_queue* q);
+void decrement_all(struct task_queue* q, int cnt);
 void push_all_ready(struct task_queue* delayed_q, struct task_queue* main_q);
 int compare(struct task a, struct task b);
 
@@ -122,10 +122,10 @@ struct task dequeue(struct task_queue* q)
 }
 
 // Decrements all the delays in a certain queue (used with the delayed queue)
-void decrement_all(struct task_queue* q)
+void decrement_all(struct task_queue* q, int cnt)
 {
 	uint8_t i=0;
-	for(;i<q->cur_sz;i++)q->tasks[i].delay--;
+	for(;i<q->cur_sz;i++)q->tasks[i].delay-=cnt;
 }
 
 // Pushes all ready tasks from the delayed queue to the main queue
