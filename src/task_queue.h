@@ -6,30 +6,31 @@
 #define lf(p) (2*p+1)
 #define rt(p) (2*p+2)
 #define p(c) ((c-1)/2)
+#define min(a,b) (a<b?a:b)
 typedef void (*fptr)(void);
 
 // Task object
 struct task{
 		fptr f;
-		int prio;
-		int delay;
+		uint16_t prio;
+		uint16_t delay;
 };
 
 // Task queue
 struct task_queue{
-    int cur_sz;
-		int max_sz;
+    uint16_t cur_sz;
+		uint16_t max_sz;
     struct task * tasks;
 };
 
 // Function declarations
 struct task_queue q_init(uint16_t size);
-void enqueue(struct task_queue* q, fptr f, int prio, int delay);
+void enqueue(struct task_queue* q, fptr f, uint16_t prio, uint16_t delay);
 void _enqueue(struct task_queue* q, struct task new_task);
-void max_heap(struct task_queue* q, int i);
+void min_heap(struct task_queue* q, int i);
 void swap(struct task *task1, struct task *task2);
 struct task dequeue(struct task_queue* q);
-void decrement_all(struct task_queue* q, int cnt);
+void decrement_all(struct task_queue* q, uint16_t cnt);
 void push_all_ready(struct task_queue* delayed_q, struct task_queue* main_q);
 int compare(struct task a, struct task b);
 
@@ -58,7 +59,7 @@ struct task_queue q_init(uint16_t size)
 }
 
 // Enqueue function
-void enqueue(struct task_queue* q, fptr f, int prio, int delay)
+void enqueue(struct task_queue* q, fptr f, uint16_t prio, uint16_t delay)
 {
 		// Create new task and call the private enqueue function
 		struct task new_task = {f, prio, delay};
@@ -87,7 +88,7 @@ void _enqueue(struct task_queue* q, struct task new_task)
 }
 
 // Max heap algorithm for dequeuing
-void max_heap(struct task_queue* q, int i) {
+void min_heap(struct task_queue* q, int i) {
 		int small = i;
 		int left = lf(i), right = rt(i);
 		// get the minimum (left or right or this node)
@@ -97,13 +98,13 @@ void max_heap(struct task_queue* q, int i) {
 		if (small==i) return;
 		// else put the small on top and heapify the affected tree
 		swap(&q->tasks[small], &q->tasks[i]);
-		max_heap(q, small);
+		min_heap(q, small);
 }
 
 // Dequeue function
 struct task dequeue(struct task_queue* q)
 {
-		struct task ret = {0, -1, 0};
+		struct task ret = {0, 0, 0};
 		// Check for queue limits
 		if (q->cur_sz ==0)
 		{
@@ -116,16 +117,16 @@ struct task dequeue(struct task_queue* q)
 		// Decrease queue size
 		q->cur_sz--;
 		// Put the last task (now at the top of the queue) in its correct place
-		max_heap(q, 0);
+		min_heap(q, 0);
 		// return the desired task
 		return ret;
 }
 
 // Decrements all the delays in a certain queue (used with the delayed queue)
-void decrement_all(struct task_queue* q, int cnt)
+void decrement_all(struct task_queue* q, uint16_t cnt)
 {
-	uint8_t i=0;
-	for(;i<q->cur_sz;i++)q->tasks[i].delay-=cnt;
+	for(uint8_t i=0;i<q->cur_sz;i++)
+		q->tasks[i].delay-= min(cnt, q->tasks[i].delay);
 }
 
 // Pushes all ready tasks from the delayed queue to the main queue

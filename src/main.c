@@ -1,12 +1,13 @@
 #include "task_queue.h"
 #include "renode_helpers.h"
 
-static const uint16_t MAX_SIZE = 16;
+static const uint16_t MAX_SIZE = 20;
 static uint8_t msg[] = "IDLE !!\n";
 static struct task_queue main_queue;
 static struct task_queue delayed_queue;
-static volatile int skipped_cycles = 0;
-static char timerFlag = 0;
+
+static volatile uint16_t skipped_cycles = 0;
+static volatile char timerFlag = 0;
 
 void SysTick_Handler(void);
 
@@ -17,7 +18,7 @@ void SysTick_Handler(void) {
 }
 
 // Enqueue task in the main queue with a certain priorty
-static void queue_task(fptr f, int prio)
+static void queue_task(fptr f, uint16_t prio)
 {
 		enqueue(&main_queue, f, prio, 0);
 }
@@ -41,7 +42,7 @@ static void dispatch()
 }
 
 // Allows rerunning a task (acts mainly as a conditional enqueuer)
-static void rerun (fptr f, int prio, int delay)
+static void rerun (fptr f, uint16_t prio, uint16_t delay)
 {
 		// Enqueue to the main if the task is not delayed, otherwise put in the delayed queue
 		if(delay==0) enqueue(&main_queue, f, prio, delay);
@@ -70,10 +71,12 @@ static void f2()
 	sendUART(tst, sizeof(tst));
 	rerun(&f2, 2, 10);
 }
+static volatile uint32_t j, i;
 static void f3()
 {
 	uint8_t tst[] = "THREE!!! \n";
 	sendUART(tst, sizeof(tst));
+	for(j=0; j<2000; ++j)for(i=0; i<10000; ++i);
 }
 static void f4()
 {
