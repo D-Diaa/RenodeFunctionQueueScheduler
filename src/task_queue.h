@@ -24,7 +24,7 @@ struct task_queue{
 };
 
 // Function declarations
-struct task_queue q_init(uint16_t size);
+void q_init(struct task_queue * q, uint16_t size);
 void enqueue(struct task_queue* q, fptr f, uint16_t prio, uint16_t delay);
 void _enqueue(struct task_queue* q, struct task new_task);
 void min_heap(struct task_queue* q, int i);
@@ -37,7 +37,9 @@ uint8_t compare(struct task a, struct task b);
 // Helper: less than operator for tasks (treated as pair<delay, prio>)
 uint8_t compare(struct task a, struct task b)
 {
+	// min delay first
 	if(a.delay<b.delay) return 1;
+	// min priority on tie
 	return (a.delay==b.delay) && (a.prio<b.prio);
 }
 
@@ -49,22 +51,19 @@ void swap(struct task *task1, struct task *task2) {
 }
 
 // Task queue constructor
-struct task_queue q_init(uint16_t size)
-{
-		struct task_queue q;
-		q.cur_sz = 0;
-		q.max_sz = size;
-		q.tasks = malloc(size*sizeof(struct task));
-		for(uint16_t i=0;i<q.max_sz;i++)q.tasks[i]=default_task;
-
-		return q;
+void q_init(struct task_queue * q, uint16_t size)
+{	
+		q->cur_sz = 0;
+		q->max_sz = size;
+		q->tasks = (struct task*)malloc(size*sizeof(struct task));
+		for(uint16_t i=0;i<q->max_sz;i++)q->tasks[i]=default_task;
 }
 
 // Enqueue function
 void enqueue(struct task_queue* q, fptr f, uint16_t prio, uint16_t delay)
 {
 		// Create new task and call the private enqueue function
-		struct task new_task = {f, prio, delay};
+		volatile struct task new_task={f, prio, delay};
 		_enqueue(q, new_task);
 }
 
@@ -125,6 +124,7 @@ struct task dequeue(struct task_queue* q)
 }
 
 // Decrements all the delays in a certain queue (used with the delayed queue)
+// Guarded with 'cur_sz' --> no need for external guard
 void decrement_all(struct task_queue* q, uint16_t cnt)
 {
 	for(uint8_t i=0;i<q->cur_sz;i++)
@@ -132,6 +132,7 @@ void decrement_all(struct task_queue* q, uint16_t cnt)
 }
 
 // Pushes all ready tasks from the delayed queue to the main queue
+// Guarded with 'cur_sz' --> no need for external guard
 void push_all_ready(struct task_queue* delayed_q, struct task_queue* main_q)
 {
 	while(delayed_q->cur_sz>0 && delayed_q->tasks[0].delay==0)
