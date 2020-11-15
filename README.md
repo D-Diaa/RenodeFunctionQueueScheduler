@@ -15,17 +15,13 @@ This scheduler uses both task_queue.h and renode_helpers.h.
     fptr: defined as a void function pointer.
     
 2. task struct has the following data fields:
-        a. 'f': function pointer of type fptr corresponding to the task function.
-        
-        b. 'prio': corresponds to the priority of the task.
-        
-        c. 'delay':
+        a. f: function pointer of type fptr corresponding to the task function.
+        b. prio: corresponds to the priority of the task.
+        c. delay: the delay of the task put in the delay queue
         
 3. task_queue struct has:
         a. cur_sz: how many elements are in the queue.
-        
         b. max_sz: maximum size.
-        
         c. tasks: a task struct pointer pointing to the array of tasks the task_queue has.
         
 4. Functions that handle _task_queue:
