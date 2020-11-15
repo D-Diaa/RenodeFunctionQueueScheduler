@@ -2,12 +2,12 @@
 
 ## Task description
 This demo consists of 3 tasks:
-| task | delay | priority |
-|------|-------|----------|
-| 1    | 7     | 1        |
-| 2    | 5     | 2        |
-| 3    | 3     | 3        |
-| 4    | N/A   | 4        |
+| task 	| delay 	| priority 	| Functionality  	|
+|------	|-------	|----------	|----------------	|
+| 1    	| 7     	| 1        	| Prints "ONE"   	|
+| 2    	| 5     	| 2        	| Prints "TWO"   	|
+| 3    	| 3     	| 3        	| Prints "THREE" 	|
+| 4    	| N/A   	| 4        	| Prints "FOUR"  	|
 
 ## Manual delay
 Any button press emulates busy task by preventing dispatching of new tasks.
