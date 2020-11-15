@@ -13,3 +13,7 @@ This demo consists of 3 tasks:
 Any button press emulates busy task by preventing dispatching of new tasks.
 This prints "Manual Delay" in the UART for every systick skipped.
 This is used to debug whether ticks that do not cause task dispatching get accounted for correctly.
+
+## Example Run
+
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/bin/running.jpg?raw=true)
