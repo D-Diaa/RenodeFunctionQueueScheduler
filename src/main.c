@@ -12,9 +12,8 @@ static volatile char timerFlag = 0;
 static volatile uint8_t stopFlag = 0;
 static volatile char uartFlag = 0;
 
-uint8_t rq[] = {0, 0, 0, 0};
-uint8_t sq[] = {0, 0, 0 ,0};
-uint8_t c = '0';
+uint8_t s = 0;
+uint16_t m = 0;
 uint8_t nl = '\n';
 
 //void SysTick_Handler(void);
@@ -27,7 +26,6 @@ void SysTick_Handler(void)
 
 void USART2_IRQHandler(void)
 {
-	c = receiveUART();
 	uartFlag = 1;
 	
 	#ifdef debug
@@ -83,22 +81,10 @@ static void f1() //recieve task
 	sendUART(tst, sizeof(tst));
 	#endif
 
-	static uint8_t msg[] = "Queue Full...Slow down!!\n";
-	static uint8_t qSize;
-	if (uartFlag) {
-		if (rq[3] == 0xFF) {
-			sendUART(msg, sizeof(msg));
-		} else {
-			rq[qSize++] = c;
-			sendUART(&c, 1);
-		}
-		if (qSize == 3) {
-			qSize = 0;
-			rq[3] = 0xFF;
-		}
-		uartFlag = 0;
-	}
-	rerun(&f1, 1, 2);
+	static uint8_t timer;
+	timer++;
+	s = (timer == 60)? (timer = 0): timer;
+	rerun(&f1, 3, 3);
 }
 static void f2() //evaluate task
 {
@@ -107,19 +93,10 @@ static void f2() //evaluate task
 	sendUART(tst, sizeof(tst));
 	#endif
 	
-	int temp;
-	if (rq[3] == 0xFF) {
-		uint8_t q1 = rq[0];
-		uint8_t q2 = rq[2];
-		uint8_t op = rq[1];
-		if (op == '+') //TODO: if needed support multi-digit results
-			temp = (q1 - '0') + (q2 - '0');
-		else
-			temp = q1 - q2;
-		sprintf((char *)sq, "%d", temp);
-		sq[3] = 0xFF;
-		rq[3] = 0;
-	}
+	static uint16_t timer;
+	if (s == 59)
+		timer++;
+	m = (timer == 999)? (timer = 0): timer;
 	rerun(&f2, 2, 3);
 }
 static void f3()
@@ -129,13 +106,12 @@ static void f3()
 	sendUART(tst, sizeof(tst));
 	#endif
 
-	if (sq[3] == 0xFF) {
-		sendUART(&nl, 1);
-		sq[3] = 0;
-		sendUART(sq, sizeof(sq));
-		sendUART(&nl, 1);
-	}
-	rerun(&f3, 3, 2);
+	static uint8_t out[] = {0, 0, 0, ':', 0, 0, 0};
+	sprintf((char *)out + 4, "%d", s);
+	sprintf((char *)out, "%d", m);
+	sendUART(out, sizeof(out));
+	sendUART(&nl, 1);
+	rerun(&f3, 1, 3);
 }
 
 // Main program
@@ -147,8 +123,8 @@ int main()
 	sendUART(tst, sizeof(tst));
 	#endif
 	queue_task(&f2, 2);
-	queue_task(&f1, 1);
-	queue_task(&f3, 3);
+	queue_task(&f1, 3);
+	queue_task(&f3, 1);
 
 	while(1) {
 		if(timerFlag && !stopFlag) {

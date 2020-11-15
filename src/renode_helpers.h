@@ -104,7 +104,7 @@ void hardware_init()
 	/* intialize UART */
 	uartInit();
 	/* enable SysTick timer to interrupt system every second */
-	SysTick_Config(SystemCoreClock);
+	SysTick_Config(SystemCoreClock/5);
 	/* enable interrupt controller for USART2 external interrupt */
 	NVIC_EnableIRQ(USART2_IRQn);
 	/* Unmask External interrupt 0 */
