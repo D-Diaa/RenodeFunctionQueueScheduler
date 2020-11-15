@@ -125,12 +125,12 @@ struct task dequeue(struct task_queue* q)
 void decrement_all(struct task_queue* q, uint16_t cnt)
 {
 	for(uint8_t i=0;i<q->cur_sz;i++)
-		q->tasks[i].delay-= min(cnt, q->tasks[i].delay);
+		q->tasks[i].delay -= min(cnt, q->tasks[i].delay);
 }
 
 // Pushes all ready tasks from the delayed queue to the main queue
 void push_all_ready(struct task_queue* delayed_q, struct task_queue* main_q)
 {
-	while(delayed_q->tasks[0].delay==0)
+	while(delayed_q->tasks[0].delay == 0)
 		_enqueue(main_q, dequeue(delayed_q));
 }

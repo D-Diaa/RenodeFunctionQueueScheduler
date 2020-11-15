@@ -5,7 +5,6 @@
 static uint8_t pressedMsg[] = "Button is pressed !!\n";
 static uint8_t releasedMsg[] = "Button is released !!\n";
 static char buttonPressed = 1;
-static volatile uint8_t stopFlag = 0;
 
 void USART2_IRQHandler(void);
 void EXTI0_IRQHandler(void);
@@ -14,15 +13,6 @@ uint8_t receiveUART(void);
 void gpioInit(void);
 void uartInit(void);
 void hardware_init(void);
-
-
-void USART2_IRQHandler(void)
-{
-	/* pause/resume UART messages */
-	stopFlag = !stopFlag;
-	/* dummy read */
-	(void)receiveUART();
-}
 
 void EXTI0_IRQHandler(void)
 {

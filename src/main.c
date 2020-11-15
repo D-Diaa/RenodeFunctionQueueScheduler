@@ -1,12 +1,21 @@
 #include "task_queue.h"
 #include "renode_helpers.h"
 
+//#define debug
+
 static const uint16_t MAX_SIZE = 20;
 static uint8_t msg[] = "IDLE !!\n";
 static struct task_queue main_queue;
 static struct task_queue delayed_queue;
 static volatile uint16_t skipped_cycles = 0;
 static volatile char timerFlag = 0;
+static volatile uint8_t stopFlag = 0;
+static volatile char uartFlag = 0;
+
+uint8_t rq[] = {0, 0, 0, 0};
+uint8_t sq[] = {0, 0};
+uint8_t c = '0';
+uint8_t nl = '\n';
 
 //void SysTick_Handler(void);
 
@@ -14,6 +23,17 @@ void SysTick_Handler(void)
 {
 	timerFlag = 1;
 	skipped_cycles++;
+}
+
+void USART2_IRQHandler(void)
+{
+	c = receiveUART();
+	uartFlag = 1;
+	
+	#ifdef debug
+	uint8_t tst[] = "in UART2 handler!!! \n";
+	sendUART(tst, sizeof(tst));
+	#endif
 }
 
 // Enqueue task in the main queue with a certain priorty
@@ -56,40 +76,79 @@ static void init()
 }
 
 // Example tasks
-static void f1()
+static void f1() //recieve task
 {
+	#ifdef debug
 	uint8_t tst[] = "ONE!!! \n";
 	sendUART(tst, sizeof(tst));
-	rerun(&f1, 1, 5);
+	#endif
+
+	static uint8_t msg[] = "Queue Full...Slow down!!\n";
+	static uint8_t qSize;
+	if (uartFlag) {
+		if (rq[3] == 0xFF) {
+			sendUART(msg, sizeof(msg));
+		} else {
+			rq[qSize++] = c;
+			sendUART(&c, 1);
+		}
+		if (qSize == 3) {
+			qSize = 0;
+			rq[3] = 0xFF;
+		}
+		uartFlag = 0;
+	}
+	rerun(&f1, 1, 2);
 }
-static void f2()
+static void f2() //evaluate task
 {
+	#ifdef debug
 	uint8_t tst[] = "TWO!!! \n";
 	sendUART(tst, sizeof(tst));
-	rerun(&f2, 2, 10);
+	#endif
+
+	if (rq[3] == 0xFF) {
+		uint8_t q1 = rq[0];
+		uint8_t q2 = rq[2];
+		uint8_t op = rq[1];
+		if (op == '+') { //TODO: if needed support multi-digit results
+			sq[0] = (q1 - '0') + (q2 - '0') + '0';
+			sq[1] = 0xFF;
+		} else {
+			sq[0] = q1 - q2 + '0';
+			sq[1] = 0xFF;
+		}
+		rq[3] = 0;
+	}
+	rerun(&f2, 2, 3);
 }
-static volatile uint32_t j, i;
 static void f3()
 {
+	#ifdef debug
 	uint8_t tst[] = "THREE!!! \n";
 	sendUART(tst, sizeof(tst));
-	for(j = 0; j < 2000; ++j)
-		for(i = 0; i < 10000; ++i);
-}
-static void f4()
-{
-	uint8_t tst[] = "FOUR!!! \n";
-	sendUART(tst, sizeof(tst));
+	#endif
+
+	if (sq[1] == 0xFF) {
+		sendUART(&nl, 1);
+		sendUART(sq, 1);
+		sendUART(&nl, 1);
+		sq[1] = 0;
+	}
+	rerun(&f3, 3, 2);
 }
 
 // Main program
 int main()
-{	
+{
 	init();
+	#ifdef debug
+	uint8_t tst[] = "Running main \n";
+	sendUART(tst, sizeof(tst));
+	#endif
 	queue_task(&f2, 2);
 	queue_task(&f1, 1);
 	queue_task(&f3, 3);
-	queue_task(&f4, 4);
 
 	while(1) {
 		if(timerFlag && !stopFlag) {
