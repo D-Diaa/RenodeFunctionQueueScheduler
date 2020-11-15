@@ -2,6 +2,7 @@
 This scheduler uses both task_queue.h and renode_helpers.h.
 
 ## task_queue.h
+###This file implements the basic functionality of a priority queue (based on binary heaps) with O(log(N)) enqueuing and dequeuing
 1. Has some useful typedef to be used by the queue functions.
 * lf(p): gets the left child node.
 * rt(p): get the right child node.
