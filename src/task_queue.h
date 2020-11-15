@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include  <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 
@@ -15,7 +15,7 @@ struct task {
 	uint16_t prio;
 	uint16_t delay;
 };
-
+static const struct task default_task = {NULL, 65535, 65535};
 // Task queue
 struct task_queue {
 	uint16_t cur_sz;
@@ -32,10 +32,10 @@ void swap(struct task *task1, struct task *task2);
 struct task dequeue(struct task_queue* q);
 void decrement_all(struct task_queue* q, uint16_t cnt);
 void push_all_ready(struct task_queue* delayed_q, struct task_queue* main_q);
-int compare(struct task a, struct task b);
+uint8_t compare(struct task a, struct task b);
 
 // Helper: less than operator for tasks (treated as pair<delay, prio>)
-int compare(struct task a, struct task b)
+uint8_t compare(struct task a, struct task b)
 {
 	if(a.delay < b.delay) return 1;
 	return (a.delay == b.delay) && (a.prio < b.prio);
@@ -56,6 +56,8 @@ struct task_queue q_init(uint16_t size)
 	q.cur_sz = 0;
 	q.max_sz = size;
 	q.tasks = malloc(size * sizeof(struct task));
+	for(uint16_t i=0;i<q.max_sz;i++)q.tasks[i]=default_task;
+
 	return q;
 }
 
@@ -94,7 +96,7 @@ void min_heap(struct task_queue* q, int i)
 	// get the minimum (left or right or this node)
 	if(left <= q->cur_sz && compare(q->tasks[left], q->tasks[small])) small = left;
 	if(right <= q->cur_sz && compare(q->tasks[right], q->tasks[small])) small = right;
-	// if this node is the maximum then left, right and this subtree are heapified
+	// if this node is the minimum then left, right and this subtree are heapified
 	if (small == i) return;
 	// else put the small on top and heapify the affected tree
 	swap(&q->tasks[small], &q->tasks[i]);
@@ -104,7 +106,7 @@ void min_heap(struct task_queue* q, int i)
 // Dequeue function
 struct task dequeue(struct task_queue* q)
 {
-	struct task ret = {0, 0, 0};
+	struct task ret = default_task;
 	// Check for queue limits
 	if (q->cur_sz == 0) {
 		printf("ERROR! - Queue is empty"); //TODO: redirect error stream
@@ -131,6 +133,6 @@ void decrement_all(struct task_queue* q, uint16_t cnt)
 // Pushes all ready tasks from the delayed queue to the main queue
 void push_all_ready(struct task_queue* delayed_q, struct task_queue* main_q)
 {
-	while(delayed_q->tasks[0].delay == 0)
+	while(delayed_q->cur_sz > 0 && delayed_q->tasks[0].delay == 0)
 		_enqueue(main_q, dequeue(delayed_q));
 }

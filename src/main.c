@@ -13,7 +13,7 @@ static volatile uint8_t stopFlag = 0;
 static volatile char uartFlag = 0;
 
 uint8_t rq[] = {0, 0, 0, 0};
-uint8_t sq[] = {0, 0};
+uint8_t sq[] = {0, 0, 0 ,0};
 uint8_t c = '0';
 uint8_t nl = '\n';
 
@@ -106,18 +106,18 @@ static void f2() //evaluate task
 	uint8_t tst[] = "TWO!!! \n";
 	sendUART(tst, sizeof(tst));
 	#endif
-
+	
+	int temp;
 	if (rq[3] == 0xFF) {
 		uint8_t q1 = rq[0];
 		uint8_t q2 = rq[2];
 		uint8_t op = rq[1];
-		if (op == '+') { //TODO: if needed support multi-digit results
-			sq[0] = (q1 - '0') + (q2 - '0') + '0';
-			sq[1] = 0xFF;
-		} else {
-			sq[0] = q1 - q2 + '0';
-			sq[1] = 0xFF;
-		}
+		if (op == '+') //TODO: if needed support multi-digit results
+			temp = (q1 - '0') + (q2 - '0');
+		else
+			temp = q1 - q2;
+		sprintf((char *)sq, "%d", temp);
+		sq[3] = 0xFF;
 		rq[3] = 0;
 	}
 	rerun(&f2, 2, 3);
@@ -129,11 +129,11 @@ static void f3()
 	sendUART(tst, sizeof(tst));
 	#endif
 
-	if (sq[1] == 0xFF) {
+	if (sq[3] == 0xFF) {
 		sendUART(&nl, 1);
-		sendUART(sq, 1);
+		sq[3] = 0;
+		sendUART(sq, sizeof(sq));
 		sendUART(&nl, 1);
-		sq[1] = 0;
 	}
 	rerun(&f3, 3, 2);
 }
