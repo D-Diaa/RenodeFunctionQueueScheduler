@@ -3,19 +3,31 @@ This scheduler uses both task_queue.h and renode_helpers.h.
 
 # task_queue.h
 1. Has some useful typedef to be used by the queue functions.
+
     lf(p): gets the left child node
+    
     rt(p): get the right child node
+    
     p(c): gets the parent node of c
+    
     min(a,b): returns the minimum of a and b
+    
     fptr: defined as a void function pointer.
+    
 2. task struct has the following data fields:
         a. 'f': function pointer of type fptr corresponding to the task function.
+        
         b. 'prio': corresponds to the priority of the task.
+        
         c. 'delay':
+        
 3. task_queue struct has:
         a. cur_sz: how many elements are in the queue.
+        
         b. max_sz: maximum size.
+        
         c. tasks: a task struct pointer pointing to the array of tasks the task_queue has.
+        
 4. Functions that handle _task_queue:
 # struct task_queue q_init(uint16_t size)
 Takes a max_size value, instantiates a task_queue object, sets its max size to the function's received argument, sets its current size to 0, allocates memory to the the tasks using    malloc.
