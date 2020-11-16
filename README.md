@@ -58,3 +58,20 @@ Decrements all delays of tasks in a certain queue; used over the delayed queue.
 Pushes all ready tasks from the delayed queue to the ready queue on condition if the task delay is 0 (which means it's ready to run).
 int compare(struct task a, struct task b);
 
+# Unit tests
+## Ready Queue Test
+### Task description
+This demo consists of 4 tasks. They do not use _rerun_ since it is only meant to test the Ready Queue. Tasks are defined as the following:
+| task 	| delay 	| priority 	| Functionality  	|
+|------	|-------	|----------	|----------------	|
+| 1    	| N/A      	| 1        	| Prints "ONE"   	|
+| 2    	| N/A      	| 2        	| Prints "TWO"   	|
+| 3    	| N/A      	| 3        	| Prints "THREE" 	|
+| 4    	| N/A   	| 4        	| Prints "FOUR"  	|
+
+### Output
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/running.jpg?raw=true)
+
+### Expected Output
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/ready_queue_truth.png?raw=true)
+
