@@ -92,7 +92,7 @@ This demo consists of 5 tasks. They do not use _rerun_ since it is only meant to
 ![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/ready_queue_truth.png?raw=true)
 
 ### Output
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/ready_queue_test.png?raw=true)
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/ready_queue_test.png?raw=true)
 
 ## Delayed Queue Test
 ### Task Description
@@ -110,7 +110,7 @@ This demo consists of 4 tasks. Tasks are defined as the following:
 
 ### Output
 
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/delay_queue_test.png?raw=true)
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/delay_queue_test.png?raw=true)
 
 ## Applications
 
@@ -130,11 +130,11 @@ The tasks we have have the following description:
 
 ### Diagram Explaining calcApp
 
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/calcAppDiagram.png?raw=true)
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/calcAppDiagram.png?raw=true)
 
 ### Output
 
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/calcApp.png?raw=true)
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/calcApp.png?raw=true)
 
 ### App 2: timerApp
 This app has 3 different tasks: the seconds counter, the minutes counter and the tasks\ which sends both values to UART2 in a nice format. It essentially implements a timer whose seconds and minutes are coming from two different tasks that increment the values independently. 
@@ -146,8 +146,8 @@ This app has 3 different tasks: the seconds counter, the minutes counter and the
 
 ### Diagram Explaining timerApp
 
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/timerAppDiagram.png?raw=true)
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/timerAppDiagram.png?raw=true)
 
 ### Output
 
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/timerApp.jpeg?raw=true)
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/timerApp.jpeg?raw=true)
