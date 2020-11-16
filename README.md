@@ -141,7 +141,7 @@ This demo consists of 4 tasks. Tasks are defined as the following:
 
 ### Output
 
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/unittest-multi-delay.png?raw=true)
+![alt text](unittests/images/multi-delay.gif)
 
 
 ## Applications
