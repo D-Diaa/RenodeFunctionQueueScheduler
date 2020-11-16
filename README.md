@@ -92,7 +92,7 @@ This demo consists of 5 tasks. They do not use _rerun_ since it is only meant to
 ![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/ready_queue_truth.png?raw=true)
 
 ### Output
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/ready_queue_test.jpg?raw=true)
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/ready_queue_test.png?raw=true)
 
 ## Delayed Queue Test
 ### Task Description
@@ -109,6 +109,27 @@ This demo consists of 4 tasks. Tasks are defined as the following:
 ![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/delay_queue_truth.png?raw=true)
 
 ### Output
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/delay_queue_test.jpg?raw=true)
 
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/delay_queue_test.png?raw=true)
+
+## Applications
+
+We developed two applications each of which has its source code in its corresponding branch in branchs ```calcApp``` and ```timerApp```. 
+
+### App 1: calcApp
+
+Our calcApp has 3 different tasks collaborating together to make a calculator at the end that evaluates an expression received through UART2. The tasks we have have the following description:
+| task 	| delay 	| priority 	| Functionality  	                |
+|------	|-------	|----------	|---------------------------------- |
+| 1    	| 2      	| 1        	| Receives Expression from UART2  	|
+| 2    	| 3      	| 2        	| Evaluates Expression              |
+| 3    	| 2      	| 3        	| Sends Result to UART2             |
+
+### Diagram Explaining calcApp
+
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/calcAppdiagram.png?raw=true)
+
+### Output
+
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/calcApp.png?raw=true)
 
