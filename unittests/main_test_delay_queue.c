@@ -88,8 +88,6 @@ static void f4()
 {
 	uint8_t tst[] = "FOUR\n";
 	sendUART(tst, sizeof(tst));
-	rerun(&f4, 4, 10);
-
 }
 
 
