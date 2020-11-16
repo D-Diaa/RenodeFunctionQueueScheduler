@@ -118,7 +118,10 @@ We developed two applications each of which has its source code in its correspon
 
 ### App 1: calcApp
 
-Our calcApp has 3 different tasks collaborating together to make a calculator at the end that evaluates an expression received through UART2. The tasks we have have the following description:
+Our calcApp has 3 different tasks collaborating together to make a calculator at the end that evaluates an expression received through UART2 and sends the result back through UART2.
+
+The tasks we have have the following description:
+
 | task 	| delay 	| priority 	| Functionality  	                |
 |------	|-------	|----------	|---------------------------------- |
 | 1    	| 2      	| 1        	| Receives Expression from UART2  	|
@@ -127,9 +130,24 @@ Our calcApp has 3 different tasks collaborating together to make a calculator at
 
 ### Diagram Explaining calcApp
 
-![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/calcAppdiagram.png?raw=true)
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/calcAppDiagram.png?raw=true)
 
 ### Output
 
 ![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/calcApp.png?raw=true)
 
+### App 2: timerApp
+This app has 3 different tasks: the seconds counter, the minutes counter and the tasks\ which sends both values to UART2 in a nice format. It essentially implements a timer whose seconds and minutes are coming from two different tasks that increment the values independently. 
+| task 	| delay 	| priority 	| Functionality  	                |
+|------	|-------	|----------	|---------------------------------- |
+| 1    	| 3      	| 3        	| Seconds Incrementer             	|
+| 2    	| 3      	| 2        	| Mins Incrementer                  |
+| 3    	| 1      	| 3        	| Sends Result to UART2             |
+
+### Diagram Explaining timerApp
+
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/timerAppDiagram.png?raw=true)
+
+### Output
+
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/timerApp.jpeg?raw=true)
