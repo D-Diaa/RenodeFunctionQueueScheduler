@@ -99,8 +99,8 @@ int main()
 {	
 	init();
 	// TEST DELAYED QUEUE ONLY
-	queue_task(&f1, 3);
-	queue_task(&f2, 4);
+	queue_task(&f1, 4);
+	queue_task(&f2, 3);
 	queue_task(&f3, 2);
 	queue_task(&f4, 1);
 
