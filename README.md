@@ -112,6 +112,23 @@ This demo consists of 4 tasks. Tasks are defined as the following:
 
 ![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/delay_queue_test.png?raw=true)
 
+## Full Functionality Test
+| task 	| delay 	| priority 	| Functionality  	                |
+|------	|-------	|----------	|---------------------------------- |
+| 1    	| 5      	| 4        	| Delays for 5 ticks  	            |
+| 2    	| 5      	| 3        	| Delays for 3 ticks                |
+| 3    	| 3      	| 2        	| Delays for 1 tick                 |
+| 4    	| N/A      	| 1         | Delays for 1 tick                 |
+
+### Expected Output
+
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/multi-delay-truth.png?raw=true)
+
+### Output
+
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/unittest-multi-delay.png?raw=true)
+
+
 ## Applications
 
 We developed two applications each of which has its source code in its corresponding branch in branchs ```calcApp``` and ```timerApp```. 
@@ -151,3 +168,5 @@ This app has 3 different tasks: the seconds counter, the minutes counter and the
 ### Output
 
 ![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/timerApp.jpeg?raw=true)
+![alt text](https://github.com/D-Diaa/RenodeFunctionQueueScheduler/blob/main/unittests/images/timerApp2.jpeg?raw=true)
+
