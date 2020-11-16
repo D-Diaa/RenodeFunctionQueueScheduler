@@ -10,11 +10,13 @@ static struct task_queue delayed_queue;
 
 static volatile uint16_t skipped_cycles = 0;
 static volatile char timerFlag = 0;
+static volatile uint16_t clk = 0;
 
 void SysTick_Handler(void)
 {
 	timerFlag = 1;
 	skipped_cycles++;
+	clk++;
 }
 
 // Enqueue task in the main queue with a certain priorty
@@ -60,30 +62,32 @@ static inline void init()
 
 static void f1()
 {
+	uint16_t startClk = clk;
 	uint8_t tst[] = "ONE\n";
 	sendUART(tst, sizeof(tst));
-	rerun(&f1, 1, 5);
+	while (clk - startClk != 4) {};
+	rerun(&f1, 4, 5);
 }
 static void f2()
 {
+	uint16_t startClk = clk;
 	uint8_t tst[] = "TWO\n";
 	sendUART(tst, sizeof(tst));
-	rerun(&f2, 2, 8);
+	while (clk - startClk != 2) {};
+	rerun(&f2, 3, 5);
 }
-//static volatile uint32_t j, i;
 static void f3()
 {
+	uint16_t startClk = clk;
 	uint8_t tst[] = "THREE\n";
 	sendUART(tst, sizeof(tst));
-	rerun(&f3, 3, 12);
-	//for(j=0; j<500; ++j)for(i=0; i<31250; ++i);
+	while (clk - startClk != 0) {};
+	rerun(&f3, 2, 3);
 }
 static void f4()
 {
 	uint8_t tst[] = "FOUR\n";
 	sendUART(tst, sizeof(tst));
-	rerun(&f4, 4, 10);
-
 }
 
 
@@ -93,10 +97,10 @@ int main()
 {	
 	init();
 	// TEST DELAYED QUEUE ONLY
-	queue_task(&f1, 1);
-	queue_task(&f2, 2);
-	queue_task(&f3, 3);
-	queue_task(&f4, 4);
+	queue_task(&f1, 4);
+	queue_task(&f2, 3);
+	queue_task(&f3, 2);
+	queue_task(&f4, 1);
 
 	while(1) {
 		if(timerFlag) {

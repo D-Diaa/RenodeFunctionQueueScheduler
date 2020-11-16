@@ -1,5 +1,5 @@
-#include "task_queue.h"
-#include "renode_helpers.h"
+#include "../src/task_queue.h" //modify the relative path if the file is moved
+#include "../src/renode_helpers.h"
 
 static const uint16_t MAX_SIZE = 16;
 static uint8_t msg[] = "IDLE\n";
